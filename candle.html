@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Happy Bday</title>
+    <link rel="stylesheet" href="candle.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Rampart+One&display=swap" rel="stylesheet">
+</head>
+<body>
+    <div class="container">
+        <h1 class="title">Happy Birthday Aniko</h1>
+        <div class="cake-container">
+            <div class="holder"></div>
+            <div class="shadow"></div>
+            <div class="cake">
+                <div class="chocolate"></div>
+            </div>
+            <div class="candle"></div>
+            <div class="flame"></div>
+            <div class="smoke"></div>
+        </div>
+    </div>
+
+    <script>
+        navigator.mediaDevices.getUserMedia({ audio: true })
+        .then(function(stream) {
+            const audioContext = new AudioContext();
+            const analyser = audioContext.createAnalyser();
+            const microphone = audioContext.createMediaStreamSource(stream);
+            const scriptProcessor = audioContext.createScriptProcessor(2048, 1, 1);
+
+            analyser.smoothingTimeConstant = 0.8;
+            analyser.fftSize = 1024;
+
+            microphone.connect(analyser);
+            analyser.connect(scriptProcessor);
+            scriptProcessor.connect(audioContext.destination);
+
+            const flameElement = document.querySelector('.flame');
+            const smokeElement = document.querySelector('.smoke');
+            const title=document.querySelector('.title');
+            let hasFlameGoneOut = false;
+
+            scriptProcessor.onaudioprocess = function() {
+                const array = new Uint8Array(analyser.frequencyBinCount);
+                analyser.getByteFrequencyData(array);
+                const arraySum = array.reduce((a, value) => a + value, 0);
+                const average = arraySum / array.length;
+
+                if (Math.round(average) > 110 && !hasFlameGoneOut) {
+                    
+                    flameElement.style.height='30px';
+                    flameElement.style.width='15px';
+                    flameElement.style.top='-240px';
+                   
+
+
+                    if(Math.round(average)>150){
+                        flameElement.style.display = 'none';
+                        smokeElement.style.display='block';
+                         title.style.opacity='1';
+                        hasFlameGoneOut = true;
+
+                    }
+                }
+
+             
+            };
+        })
+        .catch(function(err) {
+            // Handle the error
+            console.error(err);
+        });
+    </script>
+</body>
+</html>
