@@ -50,7 +50,7 @@
                 const arraySum = array.reduce((a, value) => a + value, 0);
                 const average = arraySum / array.length;
 
-                if (Math.round(average) > 110 && !hasFlameGoneOut) {
+                if (Math.round(average) > 60 && !hasFlameGoneOut) {
                     
                     flameElement.style.height='30px';
                     flameElement.style.width='15px';
@@ -58,7 +58,7 @@
                    
 
 
-                    if(Math.round(average)>150){
+                    if(Math.round(average)>100){
                         flameElement.style.display = 'none';
                         smokeElement.style.display='block';
                          title.style.opacity='1';
@@ -66,12 +66,9 @@
 
                     }
                 }
-
-             
             };
         })
         .catch(function(err) {
-            // Handle the error
             console.error(err);
         });
     </script>
